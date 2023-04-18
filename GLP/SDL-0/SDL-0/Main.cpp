@@ -1,11 +1,36 @@
 ﻿#include <iostream>
 #include <SDL.h>
 #include <glew.h>
+#include <iostream>
+#include <fstream>
+#include <string>
 using namespace std;
 #define GLEW_STATIC
 
+string LoadShader(string fileName)
+{
+	ifstream myFile;
+	myFile.open(fileName);
+	if (myFile.fail()) 
+	{
+		cerr << "Error - failed to open " << fileName << endl;
+	}
+	string fileText = "";
+	string line = "";
+	while (getline(myFile, line)) 
+	{
+		fileText += line + '\n';
+	}
+
+	myFile.close();
+	return fileText;
+}
+
 int main(int argc, char* argv[])
 {
+
+
+
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
 		cout << "SDL initialization failed. SDL Error: " << SDL_GetError();
@@ -16,10 +41,10 @@ int main(int argc, char* argv[])
 	}
 	///////////SETTING UP SDL/////////////
 	//Create a simple window
-	int width = 400;
-	int height = 400;
+	int width = 1000;
+	int height = 1000;
 	unsigned int center = SDL_WINDOWPOS_CENTERED;
-	SDL_Window* Window = SDL_CreateWindow("My window", center, center, width, height, SDL_WINDOW_OPENGL);
+	SDL_Window* Window = SDL_CreateWindow("THE GAMING", center, center, width, height, SDL_WINDOW_OPENGL);
 	//SDL_WINDOW_OPENGL is a u32 flag !
 
 
@@ -33,12 +58,46 @@ int main(int argc, char* argv[])
 		cout << "Glew initialized successfully\n";
 	}
 
+	//Set the viewing frame through which we will see the objects
+	glViewport(0, 0, width, height);
+
+	//Put the color you want here for the background
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
 	//Describe the shape by its vertices
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
+	float vertices[] =
+	{
+
+		// positions             // colors
+			 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
+			-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
+			 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f
+
+			 //GAMING
+			 /*
+				 -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+				  0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+				  0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+
+				 -0.25f, -0.25f, 0.0f, 1.0f, 0.0f, 0.0f,
+				  0.25f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f,
+				  0.0f, 0.75f, 0.0f, 0.0f, 0.0f, 1.0f,
+
+				 -0.35f, -0.25f, 0.0f, 1.0f, 0.0f, 0.0f,
+				 -0.25f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+				 -0.75f, -0.7f, 0.0f, 0.0f, 0.0f, 1.0f,
+
+
+				  0.25f, -0.15f, 0.0f, 1.0f, 0.0f, 0.0f,
+				  0.2f, -0.47f, 0.0f, 0.0f, 1.0f, 0.0f,
+				  0.75f, -0.7f, 0.0f, 0.0f, 0.0f, 1.0f,
+
+				 -0.5f, 0.125f, 0.0f, 1.0f, 0.0f, 0.0f,
+				  0.0f, -0.75f, 0.0f, 0.0f, 1.0f, 0.0f,
+				  0.5f, 0.125f, 0.0f, 0.0f, 0.0f, 1.0f*/
+
 	};
+
 
 	//Create an ID to be given at object generation
 	unsigned int vbo;
@@ -47,27 +106,10 @@ int main(int argc, char* argv[])
 	//Pass how many buffers should be created and the reference of the ID to get the value set
 	glGenBuffers(1, &vbo);
 
-
-	//Set the viewing frame through which we will see the objects
-	glViewport(0, 0, width, height);
-
-	//Put the color you want here for the background
-	glClearColor(0.0f, 0.5f, 0.2f, 1.0f);
-
-	const char* vertexShaderSource = "#version 330 core\n"
-		"in vec3 pos;\n"
-		"void main()\n"
-		"{\n"
-		"   gl_Position = vec4(pos, 1.0);\n"
-		"}\0";
-
-
-	const char* fragmentShaderSource = "#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"void main()\n"
-		"{\n"
-		"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-		"}\n\0";
+	string vs = LoadShader("RGBVertex.shader");
+	const char* vertexShaderSource = vs.c_str();
+	string fs = LoadShader("RGBFragment.shader");
+	const char* fragmentShaderSource = fs.c_str();
 
 	unsigned int vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -110,16 +152,30 @@ int main(int argc, char* argv[])
 	//Finally send the vertices array in the array buffer 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	//Enable my vertex attrib array number 0 (we only have one attribute of position)
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	// Color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+
+	//Use depth management
+	glEnable(GL_DEPTH_TEST);
+
+	//0 is our origin, the higher the z, the farther the object
+	glDepthFunc(GL_LESS);
+
 
 	bool isRunning = true;
-	while (isRunning) {
+	while (isRunning)
+	{
 		// Inputs
 		SDL_Event event;
-		while (SDL_PollEvent(&event)) {
-			switch (event.type) {
+		while (SDL_PollEvent(&event))
+		{
+			switch (event.type)
+			{
 			case SDL_QUIT:
 				isRunning = false;
 				break;
@@ -136,8 +192,36 @@ int main(int argc, char* argv[])
 
 		//OMG WE FINALLY DRAW ! We use the GL_TRIANGLES primitive type
 		//We draw from vertex 0 and we will be drawing 3 vertices
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 21);
 		SDL_GL_SwapWindow(Window); // Swapbuffer
+
+		// RGB TRIANGLE NO ANIMATIONS
+		/*// Get the time in seconds 
+		float timeValue = (float)SDL_GetTicks() / 1000;
+		float redColor = (sin(timeValue) / 2.0f) + 0.5f;
+		int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+		glUseProgram(shaderProgram);
+		glUniform4f(vertexColorLocation, redColor, 1.0f, 1.0f, 1.0f);*/
+
+		// Get the time in seconds 
+		float timeValue = (float)SDL_GetTicks() / 1000;
+		float redColor = (sin(timeValue * 5) / 2.0f) + 0.5f;
+		float greenColor = (sin(timeValue * 5 + 4) / 4.0f) + 0.5f;
+		float blueColor = (sin(timeValue * 5 + 8) / 2.0f) + 0.5f;
+		int vertexColorLocation = glGetUniformLocation(shaderProgram, "inColor");
+		glUseProgram(shaderProgram);
+		glUniform4f(vertexColorLocation, redColor, greenColor, blueColor, 1.0f);
+
+		// Moving the geometry
+		float xPosition = (sin(timeValue * 1) / 4.0f) + 0.5f;
+		int XvertexPosLocation = glGetUniformLocation(shaderProgram, "XanimPos");
+		glUseProgram(shaderProgram);
+		glUniform1f(XvertexPosLocation, xPosition);
+		float yPosition = (cos(timeValue * 1) / 4.0f) + 0.5f;
+		int YvertexPosLocation = glGetUniformLocation(shaderProgram, "YanimPos");
+		glUseProgram(shaderProgram);
+		glUniform1f(YvertexPosLocation, yPosition);
+
 	}
 	// Quit
 	SDL_DestroyWindow(Window);
