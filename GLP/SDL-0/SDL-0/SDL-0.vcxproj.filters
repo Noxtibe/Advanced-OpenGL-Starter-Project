@@ -19,4 +19,12 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="vertex.shader">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="fragment.shader">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+  </ItemGroup>
 </Project>
