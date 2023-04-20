@@ -21,10 +21,22 @@
     <None Include="fragment.shader">
       <Filter>Fichiers de ressources</Filter>
     </None>
-    <None Include="..\..\..\..\SDL-0\RGBFragment.shader">
+    <None Include="fragmentRGB.shader">
       <Filter>Fichiers de ressources</Filter>
     </None>
-    <None Include="..\..\..\..\SDL-0\RGBVertex.shader">
+    <None Include="vertexRGB.shader">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="fragmentStaticRGB.shader">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="vertexStaticRGB.shader">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="vertexDVD.shader">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="fragmentDVD.shader">
       <Filter>Fichiers de ressources</Filter>
     </None>
   </ItemGroup>

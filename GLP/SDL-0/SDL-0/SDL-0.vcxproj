@@ -81,10 +81,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\SDL-0\RGBFragment.shader" />
-    <None Include="..\..\..\..\SDL-0\RGBVertex.shader" />
     <None Include="fragment.shader" />
+    <None Include="fragmentDVD.shader" />
+    <None Include="fragmentRGB.shader" />
+    <None Include="fragmentStaticRGB.shader" />
     <None Include="vertex.shader" />
+    <None Include="vertexDVD.shader" />
+    <None Include="vertexRGB.shader" />
+    <None Include="vertexStaticRGB.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
