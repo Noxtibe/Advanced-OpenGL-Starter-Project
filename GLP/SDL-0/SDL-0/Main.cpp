@@ -40,7 +40,7 @@ void BounceColor(unsigned int shaderProgram)
 	float randomG = (rand() % 100) / 100.f;
 	float randomB = (rand() % 100) / 100.f;
 
-	int vertexColorLocation = glGetUniformLocation(shaderProgram, "offsetColor");
+	int vertexColorLocation = glGetUniformLocation(shaderProgram, "offColor");
 	glUseProgram(shaderProgram);
 	glUniform4f(vertexColorLocation, randomR, randomG, randomB, 1.0f);
 }
@@ -88,6 +88,7 @@ int main(int argc, char* argv[])
 	{
 
 		// positions             // colors
+
 			/* 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, // BASE TRIANGLE
 			-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
 			 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f*/
@@ -98,59 +99,60 @@ int main(int argc, char* argv[])
 				  0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
 				  0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f,*/
 
-				 -0.25f, -0.25f, 0.0f, 1.0f, 0.0f, 0.0f, // TRIANGLE UP UP
+				 /*-0.25f, -0.25f, 0.0f, 1.0f, 0.0f, 0.0f, // TRIANGLE UP UP
 				  0.25f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f,
-				  0.0f, 0.75f, 0.0f, 0.0f, 0.0f, 1.0f,
+				  0.0f, 0.75f, 0.0f, 0.0f, 0.0f, 1.0f,*/
 
 				 /*-0.35f, -0.25f, 0.0f, 1.0f, 0.0f, 0.0f, // LITTLE TRIANGLE LEFT DOWN
 				 -0.25f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
 				 -0.75f, -0.7f, 0.0f, 0.0f, 0.0f, 1.0f,*/
 
 
-				  /*0.25f, -0.15f, 0.0f, 1.0f, 0.0f, 0.0f, // LITTLE TRIANGLE RIGHT DOWN
-				  0.2f, -0.47f, 0.0f, 0.0f, 1.0f, 0.0f,
-				  0.75f, -0.7f, 0.0f, 0.0f, 0.0f, 1.0f,*/
+				 /*0.25f, -0.15f, 0.0f, 1.0f, 0.0f, 0.0f, // LITTLE TRIANGLE RIGHT DOWN
+				 0.2f, -0.47f, 0.0f, 0.0f, 1.0f, 0.0f,
+				 0.75f, -0.7f, 0.0f, 0.0f, 0.0f, 1.0f,*/
 
-				 -0.5f, 0.125f, 0.0f, 1.0f, 0.0f, 0.0f, // CENTER TRIANGLE DOWN
-				  0.0f, -0.75f, 0.0f, 0.0f, 1.0f, 0.0f,
-				  0.5f, 0.125f, 0.0f, 0.0f, 0.0f, 1.0f
+				-0.5f, 0.125f, 0.0f, 1.0f, 0.0f, 0.0f, // CENTER TRIANGLE DOWN
+				 0.0f, -0.75f, 0.0f, 0.0f, 1.0f, 0.0f,
+				 0.5f, 0.125f, 0.0f, 0.0f, 0.0f, 1.0f,
+
+				 // SQUARE
+
+				-0.5f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+				 0.0f,  0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+				 0.5f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+
+				-0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 1.0f,
+				-0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 1.0f,
+				 0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,
+				 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 1.0f
 
 	};
 
 
-	//Create an ID to be given at object generation
+	// Create an ID to be given at object generation
 	unsigned int vbo;
 
-	//Create second ID
-	unsigned int vbo2;
-
-	//Pass how many buffers should be created and the reference of the ID to get the value set
+	// Pass how many buffers should be created and the reference of the ID to get the value set
 	glGenBuffers(1, &vbo);
 
-	glGenBuffers(2, &vbo2);
+	// FIRST SHADER
 
 	string vs = LoadShader("vertexDVD.shader");
 	const char* vertexShaderSource = vs.c_str();
 	string fs = LoadShader("fragmentDVD.shader");
 	const char* fragmentShaderSource = fs.c_str();
 
-	// Second Triangle
-	string vs2 = LoadShader("vertex.shader");
-	const char* vertexShaderSource2 = vs2.c_str();
-	string fs2 = LoadShader("fragment.shader");
-	const char* fragmentShaderSource2 = fs2.c_str();
-
 	unsigned int vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-
-	//now that we have a vertex shader, let’s put the code text inside
+	// Now that we have a vertex shader, let’s put the code text inside
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
 
-	//aaaaand… Compile !
+	// aaaaand… Compile !
 	glCompileShader(vertexShader);
 
-	//Do the same with the fragment shader !
+	// Do the same with the fragment shader !
 	unsigned int fragmentShader;
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
@@ -159,28 +161,58 @@ int main(int argc, char* argv[])
 	unsigned int shaderProgram;
 	shaderProgram = glCreateProgram();
 
-
-
-	//now attach shaders to use to the program
+	// Now attach shaders to use to the program
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 
 
-	//and link it 
+	// And link it 
 	glLinkProgram(shaderProgram);
 
 	//now that the program is complete, we can use it 
 	glUseProgram(shaderProgram);
 
-	//Create one ID to be given at object generation
+	// SECOND SHADER
+
+	string vs2 = LoadShader("vertexRect.shader");
+	const char* vertexShaderSource2 = vs2.c_str();
+	string fs2 = LoadShader("fragmentRect.shader");
+	const char* fragmentShaderSource2 = fs2.c_str();
+
+	unsigned int vertexShader2;
+	vertexShader2 = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader2, 1, &vertexShaderSource2, NULL);
+	glCompileShader(vertexShader2);
+
+	//Do the same with the fragment shader !
+	unsigned int fragmentShader2;
+	fragmentShader2 = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader2, 1, &fragmentShaderSource2, NULL);
+	glCompileShader(fragmentShader2);
+
+	unsigned int shaderProgram2;
+	shaderProgram2 = glCreateProgram();
+
+	//now attach shaders to use to the program
+	glAttachShader(shaderProgram2, vertexShader2);
+	glAttachShader(shaderProgram2, fragmentShader2);
+
+	//and link it 
+	glLinkProgram(shaderProgram2);
+
+	// CREATE MULTIPLE VAO IF MULTIPLE SHADERS
+
+	// VAO 1
+
+	// Create one ID to be given at object generation
 	unsigned int vao;
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	//Binds the buffer linked to this ID to the vertex array buffer to be rendered. Put 0 instead of vbo to reset the value.
+	// Binds the buffer linked to this ID to the vertex array buffer to be rendered. Put 0 instead of vbo to reset the value.
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	//Finally send the vertices array in the array buffer 
+	// Finally send the vertices array in the array buffer 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	// Position attribute
@@ -190,11 +222,26 @@ int main(int argc, char* argv[])
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
+	// VAO 2
 
-	//Use depth management
+	// Create second ID
+	unsigned int vao2;
+	glGenVertexArrays(1, &vao2);
+	glBindVertexArray(vao2);
+
+	//Binds the buffer linked to this ID to the vertex array buffer to be rendered. Put 0 instead of vbo to reset the value.
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	//Finally send the vertices array in the array buffer 
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(0);
+
+	// Use depth management
 	glEnable(GL_DEPTH_TEST);
 
-	//0 is our origin, the higher the z, the farther the object
+	// 0 is our origin, the higher the z, the farther the object
 	glDepthFunc(GL_LESS);
 
 
@@ -215,12 +262,6 @@ int main(int argc, char* argv[])
 			}
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen
-		
-		//Shader to use next
-		glUseProgram(shaderProgram);
-
-		//VAO to use next
-		glBindVertexArray(vao);
 
 		// RGB TRIANGLE NO ANIM
 		// USE WITH STATIC RGB
@@ -258,7 +299,9 @@ int main(int argc, char* argv[])
 		// DVD BOUNCE
 
 		// Get the time in seconds
-		//float timeValue = (float)SDL_GetTicks() / 1000;
+		float timeValue = (float)SDL_GetTicks() / 1000;
+
+		// Screen Borders
 
 		xOff += xVelocity;
 		yOff += yVelocity;
@@ -288,9 +331,17 @@ int main(int argc, char* argv[])
 		glUseProgram(shaderProgram);
 		glUniform4f(vertexPosition, xOff, yOff, 1, 1);
 		
+		// VAO to use next
+		glBindVertexArray(vao);
+
 		//OMG WE FINALLY DRAW ! We use the GL_TRIANGLES primitive type
 		//We draw from vertex 0 and we will be drawing 3 vertices
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glUseProgram(shaderProgram2);
+
+		glDrawArrays(GL_TRIANGLE_FAN, 6, 4);
+		glUseProgram(shaderProgram);
+
 		SDL_GL_SwapWindow(Window); // Swapbuffer
 	}
 	// Quit

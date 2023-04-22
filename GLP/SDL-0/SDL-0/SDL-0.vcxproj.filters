@@ -39,6 +39,12 @@
     <None Include="fragmentDVD.shader">
       <Filter>Fichiers de ressources</Filter>
     </None>
+    <None Include="fragmentRect.shader">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="vertexRect.shader">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
